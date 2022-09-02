@@ -4,29 +4,30 @@ import { galleryItems } from "./gallery-items.js";
 //description - alt
 // Change code below this line
 
-// // Отримуємо доступ до елементів HTML, рендерим галерею картинок
+// // Отримуємо доступ до елементів HTML, рендерим галерею картинок, добавляєм.
 const galeryBox = document.querySelector(".gallery");
 const listItemsMarkup = createListItemsMarkup(galleryItems);
-galeryBox.insertAdjacentHTML("beforeend", listItemsMarkup);
 
 function createListItemsMarkup(galleryItems) {
   return galleryItems
     .map(({ preview, original, description }) => {
-      return `<div class="gallery__item">
-                <a class="gallery__link" href="${original}">
-                    <img
-                    class="gallery__image"
-                    src="${preview}"
-                    data-source="${original}"
-                    alt="${description}"
-                    onclick="return false"
-                    />
-                </a>
-            </div>`;
+      return `
+      <div class="gallery__item">
+        <a class="gallery__link" href="${original}">
+          <img
+              class="gallery__image"
+              src="${preview}"
+              data-source="${original}"
+              alt="${description}"
+              onclick="return false"
+              />
+        </a>
+      </div>`;
     })
     .join("");
 }
 
+galeryBox.insertAdjacentHTML("beforeend", listItemsMarkup);
 galeryBox.addEventListener("click", onGaleryContainerClick);
 
 function onGaleryContainerClick(evt) {
@@ -36,15 +37,18 @@ function onGaleryContainerClick(evt) {
   if (isGaleryImg !== "IMG") {
     return;
   }
-  console.log(evt);
-  // Вмонтовуємо бібліотеку lightbox, підключаємо на батьківський контент, в шаблоному рядкі вписуємо необхідну змінну (картинку)
-  document.querySelector(".gallery").onclick = () => {
-    basicLightbox
-      .create(
-        `
-      <img width="1400" height="900" src="${evt.target.dataset.source}">
-      `
-      )
-      .show();
-  };
+
+  // Підключаемо бібліотеку lightbox.
+  const instance = basicLightbox.create(`
+        <img width="1400" height="900" src="${evt.target.dataset.source}">
+  `);
+
+  instance.show();
+
+  // Закриття з кнопки ESC = На головний бокс добавить слухача і якщо code фізичної клавіші яку нажили === 'Escape' то виконать закриття.
+  galeryBox.addEventListener("keydown", (evt) => {
+    if (evt.code === "Escape") {
+      instance.close();
+    }
+  });
 }
