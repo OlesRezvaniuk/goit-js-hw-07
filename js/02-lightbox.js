@@ -24,16 +24,14 @@ function createListItemsMarkup(galleryItems) {
               onclick="return false"
               />
         </a>
-      </div>`;
+      </li>`;
     })
     .join("");
 }
 
 galeryList.insertAdjacentHTML("beforeend", listItemsMarkup);
 
-const lightbox = new SimpleLightbox(".gallery a", {
-  //   lightbox.overlayOpacity = 1
+let gallery = new SimpleLightbox(".gallery a");
+gallery.on("show.simplelightbox", function () {
+  // Do something…
 });
-if ($("a.simplelightbox ").length) {
-  var simplelightbox = $(a.simplelightbox).simpleLightbox(options);
-}
