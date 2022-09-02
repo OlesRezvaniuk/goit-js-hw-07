@@ -19,6 +19,7 @@ function createListItemsMarkup(galleryItems) {
                     src="${preview}"
                     data-source="${original}"
                     alt="${description}"
+                    onclick="return false"
                     />
                 </a>
             </div>`;
