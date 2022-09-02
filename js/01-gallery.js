@@ -5,9 +5,9 @@ import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 
 // // Отримуємо доступ до елементів HTML, рендерим галерею картинок
-const parentBox = document.querySelector(".gallery");
-
+const galeryBox = document.querySelector(".gallery");
 const listItemsMarkup = createListItemsMarkup(galleryItems);
+galeryBox.insertAdjacentHTML("beforeend", listItemsMarkup);
 
 function createListItemsMarkup(galleryItems) {
   return galleryItems
@@ -27,4 +27,24 @@ function createListItemsMarkup(galleryItems) {
     .join("");
 }
 
-parentBox.insertAdjacentHTML("beforeend", listItemsMarkup);
+galeryBox.addEventListener("click", onGaleryContainerClick);
+
+function onGaleryContainerClick(evt) {
+  // console.log(evt);
+  const isGaleryImg = evt.target.nodeName;
+
+  if (isGaleryImg !== "IMG") {
+    return;
+  }
+  console.log(evt);
+  // Вмонтовуємо бібліотеку lightbox, підключаємо на батьківський контент, в шаблоному рядкі вписуємо необхідну змінну (картинку)
+  document.querySelector(".gallery").onclick = () => {
+    basicLightbox
+      .create(
+        `
+      <img width="1400" height="900" src="${evt.target.dataset.source}">
+      `
+      )
+      .show();
+  };
+}
