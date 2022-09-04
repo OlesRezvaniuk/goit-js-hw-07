@@ -31,7 +31,7 @@ function createListItemsMarkup(galleryItems) {
 
 galeryList.insertAdjacentHTML("beforeend", listItemsMarkup);
 
-let gallery = new SimpleLightbox(".gallery a");
+var gallery = new SimpleLightbox(".gallery a");
 gallery.on("show.simplelightbox", function () {
   // Do something…
 });
