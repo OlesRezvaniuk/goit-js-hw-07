@@ -16,7 +16,7 @@ function createListItemsMarkup(galleryItems) {
     .map(({ preview, original, description }) => {
       return `
       <li class="gallery__item">
-        <a class="gallery__link" href="${original}">
+        <a class="gallery__item" href="${original}">
           <img
               class="gallery__image"
               src="${preview}"
@@ -31,7 +31,7 @@ function createListItemsMarkup(galleryItems) {
 
 galeryList.insertAdjacentHTML("beforeend", listItemsMarkup);
 
-var gallery = new SimpleLightbox(".gallery a");
-gallery.on("show.simplelightbox", function () {
-  // Do something…
+const lightbox = new SimpleLightbox(".gallery a", {
+  captionsData: "alt",
+  captionDelay: 250,
 });
