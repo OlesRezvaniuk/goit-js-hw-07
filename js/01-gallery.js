@@ -5,50 +5,58 @@ import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 
 // // Отримуємо доступ до елементів HTML, рендерим галерею картинок, добавляєм.
-const galeryBox = document.querySelector(".gallery");
-const listItemsMarkup = createListItemsMarkup(galleryItems);
+const ulGallary = document.querySelector(".gallery");
 
-function createListItemsMarkup(galleryItems) {
-  return galleryItems
-    .map(({ preview, original, description }) => {
-      return `
-      <div class="gallery__item">
-        <a class="gallery__link" href="${original}">
-          <img
-              class="gallery__image"
-              src="${preview}"
-              data-source="${original}"
-              alt="${description}"
-              onclick="return false"
-              />
-        </a>
-      </div>`;
-    })
-    .join("");
-}
+const markup = galleryItems
+  .map(({ preview, original, description }) => {
+    return `<div class="gallery__item">
+    <a class="gallery__link" href="${original}">
+    <img
+    class="gallery__image"
+    src="${preview}"
+    data-source="${original}"
+    alt="${description}" loading="lazy"
+    />
+    </a>
+    </div> `;
+  })
+  .join("");
 
-galeryBox.insertAdjacentHTML("beforeend", listItemsMarkup);
-galeryBox.addEventListener("click", onGaleryContainerClick);
+ulGallary.insertAdjacentHTML("afterbegin", markup);
+ulGallary.addEventListener("click", openModal);
 
-function onGaleryContainerClick(evt) {
-  // console.log(evt);
-  const isGaleryImg = evt.target.nodeName;
+let instance = null;
 
-  if (isGaleryImg !== "IMG") {
+function openModal(event) {
+  event.preventDefault();
+
+  if (event.target.tagName !== "IMG") {
     return;
   }
 
-  // Підключаемо бібліотеку lightbox.
-  const instance = basicLightbox.create(`
-        <img width="1400" height="900" src="${evt.target.dataset.source}">
-  `);
+  const dataSource = event.target.dataset.source;
 
-  instance.show();
-
-  // Закриття з кнопки ESC = На головний бокс добавить слухача і якщо code фізичної клавіші яку нажили === 'Escape' то виконать закриття.
-  galeryBox.addEventListener("keydown", (evt) => {
-    if (evt.code === "Escape") {
-      instance.close();
+  instance = basicLightbox.create(
+    `<img src="${dataSource}" width="800" height="600">`,
+    {
+      onClose: removeListener,
+      onShow: createListener,
     }
-  });
+  );
+  instance.show();
+}
+
+function eskCloseModal(event) {
+  console.log(event);
+  if (event.code === "Escape") {
+    instance.close();
+  }
+}
+
+function createListener(instance) {
+  window.addEventListener("keydown", eskCloseModal);
+}
+
+function removeListener(instance) {
+  window.removeEventListener("keydown", eskCloseModal);
 }
